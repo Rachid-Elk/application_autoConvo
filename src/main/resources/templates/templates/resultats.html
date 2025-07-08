@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Résultats de l'attribution</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<h2>📅 Résultats de l'attribution des candidats</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Province ID</th>
+        <th>Province</th>
+        <th>Date Attribuée</th>
+        <th>Total Candidats</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="r : ${resultats}">
+        <td th:text="${r.provinceId}"></td>
+        <td th:text="${r.provinceNom}"></td>
+        <td th:text="${#temporals.format(r.dateAttribuee, 'yyyy-MM-dd')}"></td>
+        <td th:text="${r.totalCandidats}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/" style="margin-top:20px;display:inline-block;">🔙 Retour</a>
+</body>
+</html>

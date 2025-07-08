@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Candidats</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<!-- Inclus la navbar -->
+<div th:replace="fragments/navbar :: body"></div>
+<h1>Liste des Candidats</h1>
+<div class="mb-3">
+    <a href="/attribuer-dates" class="btn btn-primary">Lancer l'attribution automatique</a>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>CIN</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Province</th>
+        <th>Date Attribuée</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${candidats}">
+        <td th:text="${c.id}">1</td>
+        <td th:text="${c.cin}">C123456</td>
+        <td th:text="${c.nom}">Nom</td>
+        <td th:text="${c.prenom}">Prénom</td>
+        <td th:text="${c.province != null ? c.province.nom : 'Aucune'}">Province</td>
+        <td th:text="${c.dateAttribuee}">2025-09-01</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
