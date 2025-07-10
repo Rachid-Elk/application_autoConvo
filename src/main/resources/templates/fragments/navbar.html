@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>NavBar</title>
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.5/css/bootstrap.min.css}">
+  <script th:src="@{/webjars/bootstrap/5.3.5/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/webjars/bootstrap/5.3.5/js/bootstrap.bundle.js}"></script>
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.css}">
+  <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css}">
+  <!-- FontAwesome via WebJars -->
+  <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.4.2/css/all.min.css}">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" th:href="@{/}">Auto‑Convocation</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/candidats}">Accueil</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/candidats}">Candidats</a>
+        </li>
+         <li class="nav-item">
+           <a class="nav-link" th:href="@{/resultats}">Resultats</a>
+         </li>
+        <!--tu peux ajouter d'autres liens ici -->
+      </ul>
+    </div>
+  </div>
+</nav>
+</body>
+</html>

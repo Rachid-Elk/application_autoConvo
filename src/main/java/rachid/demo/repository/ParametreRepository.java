@@ -8,8 +8,11 @@ package rachid.demo.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import rachid.demo.model.entity.Parametre;
 
-public interface ParametreRepository extends JpaRepository<Parametre, String> {
-    Parametre findTopByOrderByIdDesc();
+import java.util.Optional;
 
-    Parametre findFirstByOrderByIdAsc();
+public interface ParametreRepository extends JpaRepository<Parametre, String> {
+
+
+    Optional<Parametre> findTopByOrderByIdDesc();
+
 }
