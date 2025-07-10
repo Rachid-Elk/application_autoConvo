@@ -1,19 +1,41 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package rachid.demo.repository;
 
-import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import rachid.demo.model.dto.AttributionResultDTO;
 import rachid.demo.model.entity.Candidat;
+import rachid.demo.model.entity.Province;
 
-public interface CandidatRepository extends JpaRepository<Candidat, Long> {
+import java.util.List;
+
+public interface CandidatRepository extends CrudRepository<Candidat, Long>, JpaSpecificationExecutor<Candidat> {
+
+    // Tous les candidats sans date attribuée
     List<Candidat> findByDateAttribueeIsNull();
 
-    @Query("SELECT new rachid.demo.dto.AttributionResultDTO(p.id, p.nom, c.dateAttribuee, COUNT(c)) FROM Candidat c JOIN c.province p GROUP BY p.id, p.nom, c.dateAttribuee")
+    // Candidats par province sans date attribuée
+    List<Candidat> findByProvinceAndDateAttribueeIsNull(Province province);
+
+    // Liste groupée des résultats d’attribution
+    @Query("""
+        SELECT new rachid.demo.model.dto.AttributionResultDTO(
+            c.province.centre.nom,
+            c.province.nom,
+            c.dateAttribuee,
+            COUNT(c)
+        )
+        FROM Candidat c
+        GROUP BY c.province.centre.nom, c.province.nom, c.dateAttribuee
+        ORDER BY c.province.centre.nom, c.dateAttribuee
+    """)
     List<AttributionResultDTO> getAttributionResults();
+
+    // Valeurs distinctes des provinces
+    @Query("SELECT DISTINCT c.province.nom FROM Candidat c WHERE c.province IS NOT NULL")
+    List<String> getDistinctProvinceValues();
+
+    // Valeurs distinctes des centres
+    @Query("SELECT DISTINCT p.centre.nom FROM Candidat c JOIN c.province p WHERE p.centre IS NOT NULL")
+    List<String> getDistinctCentreValues();
 }

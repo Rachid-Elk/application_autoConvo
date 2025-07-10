@@ -8,16 +8,28 @@ package rachid.demo.controller;
 import java.io.PrintStream;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import rachid.demo.model.dto.AttributionResultDTO;
+import rachid.demo.model.dto.CandidatDTO;
+import rachid.demo.model.dto.CandidatFilter;
 import rachid.demo.model.entity.Candidat;
 import rachid.demo.repository.CandidatRepository;
 import rachid.demo.repository.ProvinceRepository;
 import rachid.demo.services.AttributionService;
 import rachid.demo.services.CandidatServiceImpl;
+import rachid.demo.services.CentreServiceImpl;
+import rachid.demo.services.ProvinceServiceImpl;
 
 @CrossOrigin({"*"})
 @Controller
@@ -30,31 +42,55 @@ public class CandidatController {
     private CandidatRepository candidatRepository;
     @Autowired
     private AttributionService attributionService;
+    @Autowired
+    private ProvinceServiceImpl provinceService;
+    @Autowired
+    private CentreServiceImpl centreService;
 
-    @GetMapping({"/candidats"})
-    public String afficherCandidats(Model model) {
-        List<Candidat> candidats = this.candidatServiceImpl.listerCandidats();
+//    @GetMapping({"/candidats"})
+//    public String afficherCandidats(Model model) {
+//        List<Candidat> candidats = this.candidatServiceImpl.listerCandidats();
+//
+//        for(Candidat c : candidats) {
+//            PrintStream var10000 = System.out;
+//            String var10001 = c.getNom();
+//            var10000.println("Candidat : " + var10001 + " - Province : " + (c.getProvince() != null ? c.getProvince().getNom() : "Aucune"));
+//        }
+//
+//        model.addAttribute("candidats", candidats);
+//        return "candidats";
+//    }
 
-        for(Candidat c : candidats) {
-            PrintStream var10000 = System.out;
-            String var10001 = c.getNom();
-            var10000.println("Candidat : " + var10001 + " - Province : " + (c.getProvince() != null ? c.getProvince().getNom() : "Aucune"));
-        }
+    @GetMapping("/candidats")
+    public String listCandidats(@ModelAttribute CandidatFilter filter,
+                                @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size,
+                                Model model) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "nom"));
+        Page<Candidat> result = candidatServiceImpl.getFilteredCandidats(filter, pageable);
 
-        model.addAttribute("candidats", candidats);
+        model.addAttribute("candidats", result.getContent());
+        model.addAttribute("totalPages", result.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("filter", filter);
+        model.addAttribute("provinceValues", provinceService.getAllNom());
+        model.addAttribute("centreValues", centreService.getAllNom());
+
         return "candidats";
     }
+
 
     @GetMapping({"/attribuer-dates"})
     public String attribuerDates(Model model) {
         this.attributionService.attribuerDates();
-        return "candidats";
+        return "redirect:/resultats";
     }
 
-    @GetMapping({"/resultats"})
-    public String afficherResultats(Model model) {
-        List<AttributionResultDTO> resultats = this.candidatRepository.getAttributionResults();
-        model.addAttribute("resultats", resultats);
-        return "resultats";
-    }
+//    @GetMapping({"/resultats"})
+//    public String afficherResultats(Model model) {
+//        List<AttributionResultDTO> resultats = this.candidatRepository.getAttributionResults();
+//        model.addAttribute("resultats", resultats);
+//        return "resultats";
+//    }
+
 }

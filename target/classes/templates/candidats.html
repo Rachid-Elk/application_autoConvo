@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Candidats</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.5/css/bootstrap.min.css}">
+    <script th:src="@{/webjars/bootstrap/5.3.5/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/5.3.5/js/bootstrap.bundle.js}"></script>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- FontAwesome via WebJars -->
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.4.2/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+
+
+<body class="bg-gray-100 p-4">
+<!-- Inclus la navbar -->
+<div th:replace="~{fragments/navbar :: body}"></div>
+<h1 class="text-2xl font-bold mb-4">Liste des Candidats</h1>
+
+<form th:action="@{/candidats}" method="get" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <select name="province" class="p-2 rounded">
+        <option value="">-- Province --</option>
+        <option th:each="p : ${provinceValues}" th:value="${p}" th:text="${p}"
+                th:selected="${filter.province == p}"></option>
+    </select>
+
+    <select name="centre" class="p-2 rounded">
+        <option value="">-- Centre --</option>
+        <option th:each="c : ${centreValues}" th:value="${c}" th:text="${c}"
+                th:selected="${filter.centre == c}"></option>
+    </select>
+
+    <select name="sexe" class="p-2 rounded">
+        <option value="">-- Sexe --</option>
+        <option value="M" th:selected="${filter.sexe == 'M'}">Masculin</option>
+        <option value="F" th:selected="${filter.sexe == 'F'}">Féminin</option>
+    </select>
+
+    <select name="categorie" class="p-2 rounded">
+        <option value="">-- Catégorie --</option>
+        <option value="1" th:selected="${filter.categorie == 1}">1</option>
+        <option value="2" th:selected="${filter.categorie == 2}">2</option>
+        <option value="3" th:selected="${filter.categorie == 3}">3</option>
+    </select>
+
+    <button type="submit" class="col-span-2 md:col-span-1 bg-blue-600 text-white rounded px-4 py-2">Filtrer</button>
+</form>
+
+<table class="min-w-full bg-white shadow-md rounded">
+    <thead>
+    <tr>
+        <th class="py-2">ID</th>
+        <th class="py-2">Nom</th>
+        <th class="py-2">Prénom</th>
+        <th class="py-2">Sexe</th>
+        <th class="py-2">Catégorie</th>
+        <th class="py-2">Province</th>
+        <th class="py-2">Centre</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${candidats}" class="text-center border-t">
+        <td th:text="${c.id}" class="py-2"></td>
+        <td th:text="${c.nom}" class="py-2"></td>
+        <td th:text="${c.prenom}" class="py-2"></td>
+        <td th:text="${c.sexe}" class="py-2"></td>
+        <td th:text="${c.categorie}" class="py-2"></td>
+        <td th:text="${c.province.nom}" class="py-2"></td>
+        <td th:text="${c.province.centre.nom}" class="py-2"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="mt-4 flex justify-center">
+    <div th:each="i : ${#numbers.sequence(0, totalPages-1)}">
+        <a th:href="@{/candidats(page=${i}, size=10)}"
+           th:text="${i+1}"
+           class="mx-1 px-3 py-1 rounded border border-gray-400 text-sm"
+           th:classappend="${i == currentPage} ? 'bg-blue-500 text-white' : 'bg-white'">
+        </a>
+    </div>
+</div>
+</body>
+
+<!--<body>-->
+<!--&lt;!&ndash; Inclus la navbar &ndash;&gt;-->
+<!--<div th:replace="fragments/navbar :: body"></div>-->
+<!--<h1>Liste des Candidats</h1>-->
+<!--<div class="mb-3">-->
+<!--    <a href="/attribuer-dates" class="btn btn-primary">Lancer l'attribution automatique</a>-->
+<!--</div>-->
+<!--<div class="card-body p-0">-->
+<!--    <div class="table-responsive">-->
+<!--        <table class="table table-hover mb-0">-->
+<!--            <thead>-->
+<!--            <tr class="bg-light">-->
+<!--        <th>ID</th>-->
+<!--        <th>CIN</th>-->
+<!--        <th>Nom</th>-->
+<!--        <th>Prénom</th>-->
+<!--        <th>Province</th>-->
+<!--        <th>Date Attribuée</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--            <tbody id="resultsTableBody">-->
+<!--    <tr th:each="c : ${candidats}">-->
+<!--        <td th:text="${c.id}">1</td>-->
+<!--        <td th:text="${c.cin}">C123456</td>-->
+<!--        <td th:text="${c.nom}">Nom</td>-->
+<!--        <td th:text="${c.prenom}">Prénom</td>-->
+<!--        <td th:text="${c.province != null ? c.province.nom : 'Aucune'}">Province</td>-->
+<!--        <td th:text="${c.dateAttribuee}">2025-09-01</td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+<!--</body>-->
+</html>

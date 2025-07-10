@@ -1,10 +1,10 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by FernFlower decompiler)
-//
-
 package rachid.demo.services;
 
+import rachid.demo.model.dto.AttributionResultDTO;
+
+import java.util.List;
+
 public interface AttributionService {
+    List<AttributionResultDTO> getAttributionResults();
     void attribuerDates();
 }
