@@ -1,38 +1,47 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <title>Résultats d'Attribution</title>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.5/css/bootstrap.min.css}">
-    <script th:src="@{/webjars/bootstrap/5.3.5/js/bootstrap.bundle.min.js}"></script>
-    <script th:src="@{/webjars/bootstrap/5.3.5/js/bootstrap.bundle.js}"></script>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.css}">
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css}">
-    <!-- FontAwesome via WebJars -->
-    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.4.2/css/all.min.css}">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Résultats Des Dates</title>
 </head>
 <body>
-<!-- Inclus la navbar -->
-<div th:replace="~{fragments/navbar :: body}"></div>
-<h2>Résultats d'Attribution des Dates</h2>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Centre</th>
-        <th>Province</th>
-        <th>Date Attribuée</th>
-        <th>Nombre de Candidats</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="r : ${resultats}">
-        <td th:text="${r.centre}">Centre</td>
-        <td th:text="${r.province}">Province</td>
-        <td th:text="${r.dateAttribuee}">Date</td>
-        <td th:text="${r.total}">Total</td>
-    </tr>
-    </tbody>
-</table>
+
+<section layout:fragment="content" class="p-2">
+    <main class="flex-1 bg-gray-100 p-6 overflow-auto">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <h5 class="mb-0">
+                    <i class="bi bi-table me-2 text-primary"></i> Résultats d'Attribution des Dates
+                </h5>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover mb-0 text-center">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Centre</th>
+                            <th>Province</th>
+                            <th>Date Attribuée</th>
+                            <th>Nombre de Candidats</th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-light">
+                        <tr th:each="r : ${resultats}">
+                            <td th:text="${r.centre}">Centre</td>
+                            <td th:text="${r.province}">Province</td>
+                            <td th:text="${#temporals.format(r.dateAttribuee, 'dd/MM/yyyy')}">Date</td>
+                            <td th:text="${r.total}">Total</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</section>
+
 </body>
 </html>

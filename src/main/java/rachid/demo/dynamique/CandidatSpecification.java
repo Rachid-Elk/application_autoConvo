@@ -1,43 +1,56 @@
 package rachid.demo.dynamique;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
-import rachid.demo.model.dto.CandidatFilter;
+import rachid.demo.model.dto.CandidatSearchCriteria;
 import rachid.demo.model.entity.Candidat;
 
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.persistence.criteria.Predicate ;
 
-public  class CandidatSpecification implements Specification<Candidat> {
-    private final CandidatFilter filter;
+import rachid.demo.model.entity.Centre;
+import rachid.demo.model.entity.Province;
 
-    public CandidatSpecification(CandidatFilter filter) {
-        this.filter = filter;
+public class CandidatSpecification implements Specification<Candidat> {
+    private final CandidatSearchCriteria criteria;
+
+    public CandidatSpecification(CandidatSearchCriteria criteria) {
+        this.criteria = criteria;
     }
 
     @Override
     public Predicate toPredicate(Root<Candidat> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
         List<Predicate> predicates = new ArrayList<>();
 
-        if (filter.getProvince() != null && !filter.getProvince().isEmpty()) {
-            predicates.add(cb.equal(root.get("province").get("nom"), filter.getProvince()));
+        if (criteria.getCin() != null && !criteria.getCin().isEmpty()) {
+            predicates.add(cb.like(cb.lower(root.get("cin")), "%" + criteria.getCin().toLowerCase() + "%"));
         }
 
-        if (filter.getCentre() != null && !filter.getCentre().isEmpty()) {
-            predicates.add(cb.equal(root.get("centre").get("nom"), filter.getCentre()));
+        if (criteria.getNom() != null && !criteria.getNom().isEmpty()) {
+            predicates.add(cb.like(cb.lower(root.get("nom")), "%" + criteria.getNom().toLowerCase() + "%"));
         }
 
-        if (filter.getSexe() != null && !filter.getSexe().isEmpty()) {
-            predicates.add(cb.equal(root.get("sexe"), filter.getSexe()));
+        if (criteria.getPrenom() != null && !criteria.getPrenom().isEmpty()) {
+            predicates.add(cb.like(cb.lower(root.get("prenom")), "%" + criteria.getPrenom().toLowerCase() + "%"));
         }
 
-        if (filter.getCategorie() != null) {
-            predicates.add(cb.equal(root.get("categorie"), filter.getCategorie()));
+        if (criteria.getSexe() != null && !criteria.getSexe().isEmpty()) {
+            predicates.add(cb.equal(root.get("sexe"), criteria.getSexe()));
+        }
+
+        if (criteria.getCategorieList() != null && !criteria.getCategorieList().isEmpty()) {
+            predicates.add(root.get("categorie").in(criteria.getCategorieList()));
+        }
+
+        if (criteria.getProvinceNomList() != null && !criteria.getProvinceNomList().isEmpty()) {
+            predicates.add(root.get("province").get("nom").in(criteria.getProvinceNomList()));
+        }
+
+        if (criteria.getCentreNomList() != null && !criteria.getCentreNomList().isEmpty()) {
+            predicates.add(root.get("province").get("centre").get("nom").in(criteria.getCentreNomList()));
         }
 
         return cb.and(predicates.toArray(new Predicate[0]));
     }
 }
+

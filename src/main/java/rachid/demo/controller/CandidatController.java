@@ -5,24 +5,18 @@
 
 package rachid.demo.controller;
 
-import java.io.PrintStream;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
-import rachid.demo.model.dto.AttributionResultDTO;
-import rachid.demo.model.dto.CandidatDTO;
-import rachid.demo.model.dto.CandidatFilter;
+import rachid.demo.model.dto.CandidatSearchCriteria;
 import rachid.demo.model.entity.Candidat;
 import rachid.demo.repository.CandidatRepository;
 import rachid.demo.repository.ProvinceRepository;
@@ -30,6 +24,9 @@ import rachid.demo.services.AttributionService;
 import rachid.demo.services.CandidatServiceImpl;
 import rachid.demo.services.CentreServiceImpl;
 import rachid.demo.services.ProvinceServiceImpl;
+
+import java.io.PrintStream;
+import java.util.List;
 
 @CrossOrigin({"*"})
 @Controller
@@ -61,25 +58,67 @@ public class CandidatController {
 //        return "candidats";
 //    }
 
-    @GetMapping("/candidats")
-    public String listCandidats(@ModelAttribute CandidatFilter filter,
-                                @RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "10") int size,
-                                Model model) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "nom"));
-        Page<Candidat> result = candidatServiceImpl.getFilteredCandidats(filter, pageable);
+//    @GetMapping("/candidats")
+//    public String listCandidats(@ModelAttribute CandidatSearchCriteria filter,
+//                                @RequestParam(defaultValue = "0") int page,
+//                                @RequestParam(defaultValue = "10") int size,
+//                                Model model) {
+//        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "nom"));
+//        Page<Candidat> result = candidatServiceImpl.getFilteredCandidats(filter, pageable);
+//
+//        model.addAttribute("candidats", result.getContent());
+//        model.addAttribute("totalPages", result.getTotalPages());
+//        model.addAttribute("totalItems", result.getTotalElements());
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("filter", filter);
+//        model.addAttribute("provinceValues", provinceService.getAllNom());
+//        model.addAttribute("centreValues", centreService.getAllNom());
+//
+//        return "candidats";
+//    }
 
-        model.addAttribute("candidats", result.getContent());
-        model.addAttribute("totalPages", result.getTotalPages());
+//    @GetMapping("/candidats")
+//    public String listCandidats(
+//            @ModelAttribute("criteria") CandidatSearchCriteria criteria,
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size,
+//            Model model
+//    ) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Candidat> candidats = candidatServiceImpl.getFilteredCandidats(criteria, pageable);
+//
+//        model.addAttribute("candidats", candidats.getContent());
+//        model.addAttribute("criteria", criteria); // requis pour les champs input
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", candidats.getTotalPages());
+//        model.addAttribute("pageSize", size);
+//        model.addAttribute("totalItems", candidats.getTotalElements());
+//
+//        return "candidats";
+//    }
+
+    @GetMapping("/candidats")
+    public String listCandidats(
+            @ModelAttribute("criteria") CandidatSearchCriteria criteria,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Candidat> candidats = candidatServiceImpl.getFilteredCandidats(criteria, pageable);
+
+        model.addAttribute("candidats", candidats.getContent());
+        model.addAttribute("criteria", criteria);
         model.addAttribute("currentPage", page);
-        model.addAttribute("filter", filter);
-        model.addAttribute("provinceValues", provinceService.getAllNom());
-        model.addAttribute("centreValues", centreService.getAllNom());
+        model.addAttribute("totalPages", candidats.getTotalPages());
+        model.addAttribute("pageSize", size);
+        model.addAttribute("totalItems", candidats.getTotalElements());
+
+        model.addAttribute("provinceValues", provinceRepository.findDistinctNom());
+        model.addAttribute("centreValues", provinceRepository.findDistinctCentreNom());
 
         return "candidats";
     }
-
-
     @GetMapping({"/attribuer-dates"})
     public String attribuerDates(Model model) {
         this.attributionService.attribuerDates();

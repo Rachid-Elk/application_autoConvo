@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head layout:fragment="head">
+    <meta charset="UTF-8" />
+    <title >Gestion des Candidats</title>
+    <h1 class="display-6 fw-bold" th:text="${pageTitle}">Gestion des Candidats</h1>
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.5/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-icons/1.13.1/font/bootstrap-icons.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/6.4.2/css/all.min.css}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
+</head>
+<body class="d-flex" layout:fragment="body (content, pageTitle, title)">
+
+<!-- Sidebar -->
+<div class="sidebar h-screen w-64 bg-[#181A2F] text-white shadow-lg flex flex-col">
+    <div class="text-center py-6 font-bold text-xl bg-[#242E49]">Auto Convo</div>
+    <nav class="flex-1 px-4 py-2 space-y-2">
+        <a th:href="@{/candidats}" class="block px-4 py-2 rounded-lg hover:bg-[#37415C] hover:text-[#FDA481] transition-all duration-200">🏠 Dashboard</a>
+        <a th:href="@{/candidats}" class="block px-4 py-2 rounded-lg hover:bg-[#37415C] hover:text-[#FDA481] transition-all duration-200">👤 Candidats</a>
+        <a th:href="@{/centres}" class="block px-4 py-2 rounded-lg hover:bg-[#37415C] hover:text-[#FDA481] transition-all duration-200">🏫 Centres</a>
+        <a th:href="@{/provinces}" class="block px-4 py-2 rounded-lg hover:bg-[#37415C] hover:text-[#FDA481] transition-all duration-200">🗺️ Provinces</a>
+        <a th:href="@{/resultats}" class="block px-4 py-2 rounded-lg hover:bg-[#37415C] hover:text-[#FDA481] transition-all duration-200">📝 Resultats</a>
+    </nav>
+    <div class="p-4 text-sm text-gray-400 border-t border-[#242E49]">&copy; 2025 Auto Convo</div>
+</div>
+
+<div class="content-wrapper" id="contentWrapper">
+    <!-- Main Content -->
+    <div class="container py-4">
+        <!-- Alert Messages -->
+        <div th:if="${message}" class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <span th:text="${message}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+        <!-- Page Title -->
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+            <h1 class="display-6 fw-bold" th:text="${pageTitle} ?: 'Gestion des Candidats'">Gestion des Candidats</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Accueil</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" th:text="${pageTitle} ?: 'Gestion des Candidats'">Gestion des Candidats</li>
+                </ol>
+            </nav>
+        </div>
+
+        <!-- Page Content -->
+
+        <div layout:fragment="content"></div>
+
+        <!--  <div th:replace="${content}">
+        Le contenu des pages spécifiques sera inséré ici -->
+        <!-- Content will be replaced by specific page content -->
+    </div>
+</div>
+
+<!-- Main Content
+<main class="container my-4 flex-1">
+    <div layout:fragment="content"></div>
+</main>-->
+
+<!-- Footer -->
+<footer class="text-center py-3">
+    <p>© 2025 Mon Application</p>
+</footer>
+
+<!-- JS -->
+<script th:src="@{/webjars/bootstrap/5.3.5/js/bootstrap.bundle.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.full.min.js"></script>
+<script th:src="@{/js/filters.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('.select2').select2({
+            theme: 'bootstrap-5',
+            placeholder: "Sélectionner",
+            allowClear: true
+        });
+    });
+</script>
+</body>
+</html>

@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import rachid.demo.dynamique.CandidatSpecification;
 import rachid.demo.model.dto.CandidatDTO;
-import rachid.demo.model.dto.CandidatFilter;
+import rachid.demo.model.dto.CandidatSearchCriteria;
 import rachid.demo.model.entity.Candidat;
 import rachid.demo.repository.CandidatRepository;
 
@@ -27,8 +27,8 @@ public class CandidatServiceImpl implements CandidatService {
         return (List<Candidat>) this.candidatRepository.findAll();
     }
 
-    public Page<Candidat> getFilteredCandidats(CandidatFilter filter, Pageable pageable) {
-        return candidatRepository.findAll(new CandidatSpecification(filter), pageable);
+    public Page<Candidat> getFilteredCandidats(CandidatSearchCriteria criteria, Pageable pageable) {
+        return candidatRepository.findAll(new CandidatSpecification(criteria), pageable);
     }
 
 

@@ -1,0 +1,80 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="{candidats.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Candidats-Filter</title>
+</head>
+<body >
+<div layout:fragment="filter">
+    <form th:action="@{/candidats}" method="get" class="mb-4">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label for="cin" class="form-label">CIN</label>
+                <input type="text" class="form-control" id="cin" name="cin" th:value="${criteria.cin}">
+            </div>
+
+            <div class="col-md-3">
+                <label for="nom" class="form-label">Nom</label>
+                <input type="text" class="form-control" id="nom" name="nom" th:value="${criteria.nom}">
+            </div>
+
+            <div class="col-md-3">
+                <label for="prenom" class="form-label">Prénom</label>
+                <input type="text" class="form-control" id="prenom" name="prenom" th:value="${criteria.prenom}">
+            </div>
+
+            <div class="col-md-3">
+                <label for="sexe" class="form-label">Sexe</label>
+                <select class="form-select" id="sexe" name="sexe">
+                    <option value="">--</option>
+                    <option value="M" th:selected="${criteria.sexe == 'M'}">Homme</option>
+                    <option value="F" th:selected="${criteria.sexe == 'F'}">Femme</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="categorie" class="form-label">Catégorie</label>
+                <select class="form-select select2" id="categorie" name="categorieList" multiple="multiple">
+                    <option value="1" th:selected="${#lists.contains(criteria.categorieList, 1)}">1</option>
+                    <option value="2" th:selected="${#lists.contains(criteria.categorieList, 2)}">2</option>
+                    <option value="3" th:selected="${#lists.contains(criteria.categorieList, 3)}">3</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="provinceNomList" class="form-label">Province</label>
+                <select class="form-select select2" id="provinceNomList" name="provinceNomList" multiple="multiple">
+                    <option th:each="p : ${provinceValues}"
+                            th:value="${p}"
+                            th:text="${p}"
+                            th:selected="${#lists.contains(criteria.provinceNomList, p)}"></option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="centreNomList" class="form-label">Centre</label>
+                <select class="form-select select2" id="centreNomList" name="centreNomList" multiple="multiple">
+                    <option th:each="c : ${centreValues}"
+                            th:value="${c}"
+                            th:text="${c}"
+                            th:selected="${#lists.contains(criteria.centreNomList, c)}"></option>
+                </select>
+            </div>
+
+            <div class="col-md-2 align-self-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search"></i> Rechercher
+                </button>
+            </div>
+
+            <div class="col-md-2 align-self-end">
+                <button type="button" class="btn btn-secondary w-100" onclick="resetFilters()">
+                    <i class="bi bi-x-circle"></i> Réinitialiser
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

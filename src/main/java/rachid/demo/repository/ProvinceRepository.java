@@ -18,4 +18,13 @@ public interface ProvinceRepository extends JpaRepository<Province, Long> {
     // Tous les noms de provinces
     @Query("SELECT p.nom FROM Province p")
     List<String> findAllNoms();
+
+    @Query("SELECT DISTINCT p.nom FROM Province p")
+    List<String> findDistinctNom();
+
+
+    List<Province> findByCentreNom(String centreNom);
+
+    @Query("SELECT DISTINCT p.centre.nom FROM Province p")
+    List<String> findDistinctCentreNom();
 }
